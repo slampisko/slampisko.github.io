@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Boss Refresher for KOTD</title>
+    	<link rel="stylesheet" href="../css/base_style.css">
+    	<link rel="stylesheet" href="refresher.css">
+        <script src="../js/functions.js"></script>
+        <script src="refresher.js"></script>
+    </head>
+    <body>
+        <div id="header" class="header">
+            <div class="contentWrapper">
+                <form id="inputForm">
+                    <div id="hideableHeader">
+                        <label class="label" for="postId">Post ID:</label>
+                        <input type="text" name="postId" id="postId" />
+                        <input type="submit" id="submitButton" value="Load post"/><br>
+                        <span id="idInputHint" class="info smaller">You can paste a link here &uarr;<br></span>
+                        <div class="flexContainer centerAligned">
+                            <label for="reloadRate">Reload every:</label>
+                            <select name="reloadRate" id="reloadRate">
+                                <option value="0">Disabled</option>
+                            </select>
+                            <input class="hidden" type="button" id="disableWatching" value="Disable" />
+                            <span class="spacer flex-grow"></span>
+                            <span class="link hidden" id="hideHeader">Hide header <div class="rotateLeft">&#x226B;</div></span>
+                        </div>
+                    </div>
+                    <div class="flexContainer">
+                        <span class="spacer flex-grow"></span>
+                        <span class="link hidden" id="showHeader">Show header <div class="rotateRight">&#x226B;</div></span>
+                    </div>
+                    <!-- <label class="label" for="refreshRate">Refresh rate [ms]:</label>
+                    <input type="number" id="refreshRate" value="2000" /> -->
+                </form>
+            </div>
+        </div>
+        <div class="contentWrapper" id="mainContentWrapper">
+            <div class="mainContent">
+                <div id="postTitleWrapper" class="flexContainer centerAligned">
+                    <span id="postTitle" class="flex-grow">Enter a post link to load the boss and start updating comments...</span>
+                    <span id="postFlair"></span>
+                </div>
+                <div class="hidden">
+                    <div class="label">Number of comments:</div>
+                    <div id="commentCount">
+                        <div class="gradient"></div>
+                        <span id="numComments" class="badge low" title="Current number of comments"></span>
+                        <div id="commentDeltaHistory" title="Comment delta history"></div>
+                    </div>
+                </div>
+                <div class="hidden">
+                    <div id="infoWrapper" class="flexContainer centerAligned">
+                        <!-- <div class="tile hidden">
+                            <div class="label">Current health:</div>
+                            <span id="currentHealth" class="badge"></span>
+                        </div> -->
+                        <div class="tile label">Last comments:</div>
+                        <div class="spacer flex-grow"></div>
+                        <div class="tile hidden">
+                            <div class="label smaller">Last updated:</div>
+                            <span class="smaller" id="lastUpdated"></span>
+                            <div id="reloadSpinner" class="spinner hidden">&#x25E1;</div>
+                            <div id="reloadSpinnerIdle" class="spinner idle hidden">&#x25CF;</div>
+                        </div>
+                    </div>
+                    <div id="lastComments"></div>
+                </div>
+            </div>
+        </div>
+        <div id="statusBar" class="idle">
+            <div class="contentWrapper">
+                <span class="label">Status: </span>
+                <span id="status">&#x1F4A4; Idle</span>
+                <span class="flex-grow"></span>
+                <div class="clock">
+                    <span class="label">&#x1F559; </span>
+                    <span id="clock"></span>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

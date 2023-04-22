@@ -1,0 +1,227 @@
+p {
+    margin: 0;
+}
+
+#inputForm {
+    padding: 4pt;
+}
+
+#hideHeader, #showHeader {
+    flex-shrink: 0;
+    font-size: smaller;
+    text-decoration: none;
+    border-bottom: 1px solid #f5ae22;
+}
+
+.flexContainer.centerAligned {
+    align-items: center;
+}
+
+#postTitleWrapper {
+    background-color: #463D51;
+    flex-direction: column;
+}
+
+#postTitle {
+    font-size: large;
+    font-weight: bold;
+    margin: 4pt;
+}
+
+#postFlair {
+    flex-shrink: 0;
+}
+
+#postFlair>span {
+    padding: 4px;
+}
+
+.contentWrapper {
+    max-width: 600pt;
+    margin: 0 auto 0 auto;
+}
+
+#mainContentWrapper {
+    margin-top: 1em;
+    margin-bottom: 5em;
+}
+
+.mainContent {
+    margin: 8pt;
+}
+
+.mainContent > div {
+    overflow: hidden;
+}
+
+#postLink {
+    width: 30em;
+}
+
+#refreshRate {
+    width: 5em;
+}
+
+div.tile {
+    min-height: 18pt;
+}
+
+.label {
+    font-weight: bold;
+    display: inline-block;
+}
+
+.authorFlair {
+    color: #1f0f1f;
+    font-size: smaller;
+    border-radius: 2px;
+    padding: 2pt;
+    display: inline-block;
+}
+
+img.authorFlairEmoji {
+    max-height: 12pt;
+    margin: 2pt 0pt 0 2pt;
+}
+
+#numComments,
+#currentHealth {
+    font-weight: bold;
+    font-size: large;
+}
+
+.spinner.idle {
+	color: #b1150f;
+	animation: none;
+}
+
+.comment,
+.commentDelta {
+    transform: scale(1.05);
+    font-size: large;
+    transform-origin: center;
+}
+
+.commentDelta.seen {
+    font-size: small;
+}
+
+.commentDelta.nonzero {
+    font-size: large;
+    font-weight: bold;
+}
+
+.badge {
+    border-radius: 5px;
+}
+
+.badge.low {
+    background: #4b6e3a;
+}
+
+.badge.medium {
+    background: #f5ae22;
+}
+
+.badge.high {
+    background: #b1150f;
+}
+
+.seen {
+    transform: scale(1);
+}
+
+.tween {
+    transition: transform 0.2s linear;
+}
+
+.comment {
+    border-left: 2px solid #4b6e3a;
+}
+
+.replies>.comment {
+    margin-left: 16px;
+}
+
+.comment>.content {
+    font-size: smaller;
+    background-color: #042e33;
+}
+
+#commentDeltaHistory {
+    display: flex;
+    align-items: flex-end;
+    font-size: small;
+    flex-shrink: 0;
+}
+
+.gradient {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 50;
+    background: linear-gradient(to right, transparent, transparent, #1f0f1f);
+}
+
+#header {
+    background-color: #042e33;
+    border-bottom: 2px solid #f5ae22;
+}
+
+#postFlair,
+#numComments,
+#lastUpdated,
+#commentDeltaHistory,
+#currentHealth,
+.commentDelta,
+.author,
+.content {
+    margin: 4px;
+    padding: 4px;
+}
+
+#commentCount {
+    position: relative;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+}
+
+#statusBar {
+    position: fixed;
+    z-index: 100;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 8pt;
+}
+
+#statusBar > .contentWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+}
+
+#statusBar.idle {
+    background-color: #042e33;
+    border-top: 2px solid #f5ae22;
+}
+
+#statusBar.watching {
+    background-color: #4b6e3a;
+    border-top: 2px solid #f5ae22;
+}
+
+.clock {
+    margin-right: 32px;
+    float: right;
+}
+
+@media (min-width: 600px) {
+    #postTitleWrapper {
+        flex-direction: row;
+    }
+}

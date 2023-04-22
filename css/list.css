@@ -17,16 +17,11 @@ td, th {
 
 .tableWrapper {
   position: relative;
-  width: fit-content;
-}
-
-.flexContainer {
-	justify-content: center;
-	display: flex;
+  width: 100%;
 }
 
 .mainContent {
-	max-width: 800pt;
+	max-width: 960pt;
 	margin:16pt;
 }
 
@@ -57,7 +52,7 @@ td, th {
 	align-items: center;
 }
 
-.tr > .bossLink, .totalDmg {
+.tr > div.bossLink, .totalDmg {
 	background-color: #463D51;
 	font-weight: bold;
 }
@@ -73,6 +68,19 @@ td, th {
 
 .td {
 	flex-grow: 1;
+}
+
+.flex-grow {
+	flex-grow: 1;
+}
+
+.refresherLink {
+	font-size: x-large;
+	flex-shrink: 0;
+	text-align: center;
+	min-height: 24pt;
+	min-width: 24pt;
+	text-decoration: none;
 }
 
 @media (min-width: 800px) {

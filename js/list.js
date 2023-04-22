@@ -1,22 +1,12 @@
-const timestampThresholds = [
-	// { limit: Infinity, text: 'Never' }, // delete this
-	{ limit: 5, text: 'Just now' },
-	{ limit: 20, text: 'Seconds ago' },
-	{ limit: 60, text: 'Less than a minute ago' },
-	{ limit: 120, text: 'A minute ago' },
-	{ limit: 3600, text: '{MIN} minutes ago' },
-	{ limit: Infinity, text: 'Over an hour ago' }
-];
-
 const reloadRates = {
 	0: 'Disabled',
-	5: '5 seconds',
-	20: '20 seconds',
-	60: 'minute',
-	180: '3 minutes',
-	300: '5 minutes',
-	600: '10 minutes',
-	1800: '30 minutes',
+	5000: '5 seconds',
+	20000: '20 seconds',
+	60000: 'minute',
+	180000: '3 minutes',
+	300000: '5 minutes',
+	600000: '10 minutes',
+	1800000: '30 minutes',
 };
 
 let currentInterval = 0;
@@ -26,6 +16,8 @@ function updateData() {
 	reloadSpinner.classList.value = 'spinner';
 	const tableOverlay = $$(document).find('#tableOverlay');
 	tableOverlay.classList.value = '';
+	const lastUpdated = $$(document).find('#lastUpdated');
+	lastUpdated.innerHTML = `Loading`;
 	const url = `https://www.reddit.com/user/KickOpenTheDoorBot/submitted/.json?sort=new&_=${
 		new Date().getTime()
 	}`;
@@ -45,14 +37,10 @@ function loadBosses(url) {
 
 function updatePage(json) {
 	const reloadSpinner = $$(document).find('#reloadSpinner');
-	reloadSpinner.classList.add('hidden');
+	reloadSpinner.classList.value = 'hidden';
 	const tableOverlay = $$(document).find('#tableOverlay');
 	tableOverlay.classList.add('hidden');
-	const updateTimestamp = new Date();
-	const lastUpdated = $$(document).find('#lastUpdated');
-	lastUpdated.title = `${updateTimestamp.toLocaleTimeString()}`;
-	lastUpdated.data = updateTimestamp.getTime();
-	lastUpdated.innerHTML = `Just now`;
+	setInitialLastUpdatedString();
 	const bosses = getBossListFromListing(json);
 	if (bosses.length < 1) return;
 	bosses.sort((a, b) => a.currentHp - b.currentHp);
@@ -69,11 +57,13 @@ function updatePage(json) {
 		const maxDmg = getMaxDmg(boss);
 		linkRow.innerHTML = `<img class="thing smallthumb" alt="Post Thumbnail" src="${
 			boss.thumbnail
-		}"><a href="${
+		}"><a class="bossLink" href="${
 			`https://www.reddit.com/r/kickopenthedoor/comments/${boss.id}`
 		}" target="_blank">${
 			boss.title.replace(/(.*?)\s+\[.*?\]$/, '$1')
-		}</a>`;
+		}</a><span class="flex-grow"></span><a class="thing refresherLink" title="Watch this boss" href="../refresher/index.html?id=${
+			boss.id
+		}">&#x1F440;</a>`;
 
 		dataRow.innerHTML = `<div class="td flex-fill">
 		<span class="thing flair" style="background-color:${
@@ -142,7 +132,9 @@ function parseFlair(flair) {
 	}
 	return {
 		type: flair.replace(/([^ ]+).*/, '$1'),
-		stars: flair.replace(/.*? (.*?) .*/, '$1'),
+		stars: flair.includes('Boss') ?
+				flair.replace(/(.*?) .*/, '$1') :
+				flair.replace(/.*? (.*?) .*/, '$1'),
 		currentHp: flair.replace(/.*? \[.*? (\d+).*/, '$1'),
 		maxHp: flair.replace(/.*?\/(\d+).*/, '$1')
 	};
@@ -158,39 +150,6 @@ function getMaxGold(boss) {
 function getMaxDmg(boss) {
 	// MaxDamage = 0.08 * MaxHealth^0.15 * CurrentHealth^0.5 * BossLevel^1.7
 	return `${Math.ceil(0.08 * boss.maxHp**0.15 * boss.currentHp**0.5 * boss.stars.length**1.7)}`;
-}
-
-function updateTimestamp() {
-	const lastUpdated = $$(document).find("#lastUpdated");
-	if (!!lastUpdated.data) {
-		const delta = Date.now() - lastUpdated.data;
-		let textToSet = getTimestampThresholdText(delta);
-		if (lastUpdated.innerHTML !== textToSet) {
-			lastUpdated.innerHTML = textToSet;
-		}
-	}
-}
-
-function getTimestampThresholdText(delta) {
-	for (const threshold of timestampThresholds) {
-		if (delta < threshold.limit * 1000) {
-			return threshold.text.replace('{MIN}', ~~(delta / 60000));
-		}
-	}
-
-	return 'Never';
-}
-
-function getReloadRatesHTML() {
-	let result = '';
-	for (const key in reloadRates) {
-		if (Object.hasOwnProperty.call(reloadRates, key)) {
-			const element = reloadRates[key];
-			result += `<option value="${key}000">${element}</option>`;			
-		}
-	}
-
-	return result;
 }
 
 function upholdReloadRate(interval) {
@@ -215,7 +174,7 @@ function windTheClock() {
 }
 
 function onEverySecond() {
-	updateTimestamp();
+	updateLastUpdatedString();
 	upholdReloadRate(currentInterval);
 }
 
@@ -233,9 +192,9 @@ window.addEventListener("load", function (e) {
 		e.preventDefault();
 		updateData();
 	});
-	const reloadRates = $$(document).find('#reloadRate');
-	reloadRates.innerHTML = getReloadRatesHTML();
-	reloadRates.addEventListener("change", function(e) {
+	const reloadRatesDiv = $$(document).find('#reloadRate');
+	reloadRatesDiv.innerHTML = getReloadRatesHTML(reloadRates);
+	reloadRatesDiv.addEventListener("change", function(e) {
 		onReloadRateChange(e.target.value);
 	});
 	windTheClock();
