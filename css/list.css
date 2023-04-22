@@ -6,12 +6,13 @@ td, th {
 #lastUpdatedWrapper {
 	display: flex;
 	flex-direction: row-reverse;
-	min-height: 18pt;
+	min-height: 24pt;
 }
 
 .smallthumb {
 	display: inline-block;
-	max-height: 36pt;
+	max-height: 48pt;
+	max-width: 48pt;
 }
 
 .tableWrapper {
@@ -26,6 +27,7 @@ td, th {
 
 .mainContent {
 	max-width: 800pt;
+	margin:16pt;
 }
 
 #tableOverlay {
@@ -40,4 +42,44 @@ td, th {
 
 .lastUpdated {
 	align-self: flex-end;
+}
+
+.tr {
+    display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	border: 1px solid #463D51;
+}
+
+.tr > div {
+	width: 100%;
+	display: flex;
+	align-items: center;
+}
+
+.tr > .bossLink, .totalDmg {
+	background-color: #463D51;
+	font-weight: bold;
+}
+
+.tr > .bossData {
+	min-height: 32pt;
+	text-align: center;
+}
+
+.tr > .bossData > .td {
+	flex-shrink: 0;
+}
+
+.td {
+	flex-grow: 1;
+}
+
+@media (min-width: 800px) {
+	.tr > .bossLink, .tr > .bossData {
+		width: 48%;
+	}
+	.tr {
+		flex-direction: row;
+	}
 }

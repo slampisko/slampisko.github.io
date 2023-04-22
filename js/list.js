@@ -56,39 +56,49 @@ function updatePage(json) {
 	const bosses = getBossListFromListing(json);
 	if (bosses.length < 1) return;
 	bosses.sort((a, b) => a.currentHp - b.currentHp);
-	const tbody = $$(document).find('#bossesTable > tbody');
+	const tbody = $$(document).find('#bossesTable');
 	tbody.innerHTML = '';
 	let totalDmg = 0;
 	for (const boss of bosses) {
-		const linkRow = document.createElement('tr');
-		const dataRow = document.createElement('tr');
+		const tr = document.createElement('div');
+		tr.classList.add('tr');
+		const linkRow = document.createElement('div');
+		linkRow.classList.add('bossLink');
+		const dataRow = document.createElement('div');
+		dataRow.classList.add('bossData');
 		const maxDmg = getMaxDmg(boss);
-		linkRow.innerHTML = `<th colspan="2"><a href="${
-				`https://www.reddit.com/r/kickopenthedoor/comments/${boss.id}`
-			}" target="_blank">${
-				boss.title.replace(/(.*?)\s+\[.*?\]$/, '$1')
-			}</a></th><th><img class="smallthumb" src="${
-				boss.thumbnail
-			}"></th>`;
-		dataRow.innerHTML = `<td><span class="thing flair" style="background-color:${
-				boss.flair.backgroundColor
-			}; color: ${
-				boss.flair.textColor === "light" ? "white" : "black"
-			}">${
-				boss.flair.text
-			}</span></td><td class="rightalign"><span title="Approx. Max Gold">&#x1F4B0;</span> ${
-				getMaxGold(boss)
-			}</td><td class="rightalign"><span title="Max Damage">&#x1F4A5;<span> ${
-				maxDmg
-			}</td>`;
-		tbody.appendChild(linkRow);
-		tbody.appendChild(dataRow);
+		linkRow.innerHTML = `<img class="thing smallthumb" alt="Post Thumbnail" src="${
+			boss.thumbnail
+		}"><a href="${
+			`https://www.reddit.com/r/kickopenthedoor/comments/${boss.id}`
+		}" target="_blank">${
+			boss.title.replace(/(.*?)\s+\[.*?\]$/, '$1')
+		}</a>`;
+
+		dataRow.innerHTML = `<div class="td flex-fill">
+		<span class="thing flair" style="background-color:${
+			boss.flair.backgroundColor
+		}; color: ${
+			boss.flair.textColor === "light" ? "white" : "black"
+		}">${
+			boss.flair.text
+		}</span></div><div class="td"><span title="Approx. Max Gold">&#x1F4B0;</span> ${
+			getMaxGold(boss)
+		}</div><div class="td"><span title="Max Damage">&#x1F4A5;<span> ${
+			maxDmg
+		}</div>`;
+		tr.appendChild(linkRow);
+		tr.appendChild(dataRow);
+		tbody.appendChild(tr);
 		totalDmg += Number(maxDmg);
 	}
-	const lastRow = document.createElement('tr');
-	lastRow.innerHTML = `<th class="rightalign" colspan="2">Total Damage:</th><th class="rightalign">&#x1F4A5; ${
-		totalDmg
-	}</th>`;
+	const lastRow = document.createElement('div');
+	lastRow.classList.add('tr');
+	lastRow.innerHTML = `<div class="totalDmg">
+		<span class="thing td rightalign">Total Max Damage:</span>
+		<span class="thing td" title="Total Max Damage">&#x1F4A5; ${
+			totalDmg
+		}</span></div>`;
 	tbody.appendChild(lastRow);
 }
 
