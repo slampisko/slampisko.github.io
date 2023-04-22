@@ -233,7 +233,7 @@ window.addEventListener("load", function (e) {
 		e.preventDefault();
 		updateData();
 	});
-	const reloadRates = $$(document).find('#reloadRate')
+	const reloadRates = $$(document).find('#reloadRate');
 	reloadRates.innerHTML = getReloadRatesHTML();
 	reloadRates.addEventListener("change", function(e) {
 		onReloadRateChange(e.target.value);
