@@ -1,0 +1,43 @@
+td, th {
+	padding: 4pt;
+	max-width: 16em;
+}
+
+#lastUpdatedWrapper {
+	display: flex;
+	flex-direction: row-reverse;
+	min-height: 18pt;
+}
+
+.smallthumb {
+	display: inline-block;
+	max-height: 36pt;
+}
+
+.tableWrapper {
+  position: relative;
+  width: fit-content;
+}
+
+.flexContainer {
+	justify-content: center;
+	display: flex;
+}
+
+.mainContent {
+	max-width: 800pt;
+}
+
+#tableOverlay {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	background-color: #00000044;
+}
+
+.lastUpdated {
+	align-self: flex-end;
+}
