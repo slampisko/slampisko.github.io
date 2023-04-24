@@ -232,7 +232,7 @@ function buildComment(commentDiv, commentData) {
 }
 
 function buildFlair(commentData) {
-    if (commentData.author_flair_richtext[1]) {
+    if (commentData.author_flair_richtext && commentData.author_flair_richtext[1]) {
         return `<div class="authorFlair" style="background-color:${
                     commentData.author_flair_background_color
                 }"><img class="authorFlairEmoji" alt="${
