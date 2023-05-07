@@ -9,7 +9,17 @@ const reloadRates = {
 	1800000: '30 minutes',
 };
 
+const sortModes = [
+	// default sort -- by least HP
+	(a, b) => a.currentHp - b.currentHp,
+	// no sorting (i.e. by newest)
+	(a, b) => 1,
+	// by biggest max damage
+	(a, b) => b.maxDmg - a.maxDmg,
+];
+
 let currentInterval = 0;
+let currentSortMode = 0;
 
 function updateData() {
 	const reloadSpinner = $$(document).find('#reloadSpinner');
@@ -43,7 +53,7 @@ function updatePage(json) {
 	setInitialLastUpdatedString();
 	const bosses = getBossListFromListing(json);
 	if (bosses.length < 1) return;
-	bosses.sort((a, b) => a.currentHp - b.currentHp);
+	bosses.sort(sortModes[currentSortMode]);
 	const tbody = $$(document).find('#bossesTable');
 	tbody.innerHTML = '';
 	let totalDmg = 0;
@@ -54,7 +64,6 @@ function updatePage(json) {
 		linkRow.classList.add('bossLink');
 		const dataRow = document.createElement('div');
 		dataRow.classList.add('bossData');
-		const maxDmg = getMaxDmg(boss);
 		linkRow.innerHTML = `<img class="thing smallthumb" alt="Post Thumbnail" src="${
 			boss.thumbnail
 		}"><a class="bossLink" href="${
@@ -75,12 +84,12 @@ function updatePage(json) {
 		}</span></div><div class="td"><span title="Approx. Max Gold">&#x1F4B0;</span> ${
 			getMaxGold(boss)
 		}</div><div class="td"><span title="Max Damage">&#x1F4A5;<span> ${
-			maxDmg
+			boss.maxDmg
 		}</div>`;
 		tr.appendChild(linkRow);
 		tr.appendChild(dataRow);
 		tbody.appendChild(tr);
-		totalDmg += Number(maxDmg);
+		totalDmg += Number(boss.maxDmg);
 	}
 	const lastRow = document.createElement('div');
 	lastRow.classList.add('tr');
@@ -100,6 +109,12 @@ function getBossListFromListing(json) {
 		if (post.data.locked || post.data.title.startsWith("[Slime Only] ")) continue;
 		const flair = post.data.link_flair_text;
 		const flairData = parseFlair(flair);
+		const maxDmg = getMaxDmg({
+			maxHp: flairData.maxHp,
+			currentHp: flairData.currentHp,
+			stars: flairData.stars
+		});
+
 		if (flairData.currentHp > 0) {
 			bosses.push({
 				id: post.data.id,
@@ -113,7 +128,8 @@ function getBossListFromListing(json) {
 				type: flairData.type,
 				stars: flairData.stars,
 				currentHp: flairData.currentHp,
-				maxHp: flairData.maxHp
+				maxHp: flairData.maxHp,
+				maxDmg: maxDmg
 			});
 		}
 	}
@@ -182,6 +198,11 @@ function onReloadRateChange(newValue) {
 	currentInterval = newValue;
 }
 
+function onSortModeChange(newValue) {
+	currentSortMode = newValue;
+	updateData();
+}
+
 window.addEventListener("load", function (e) {
 	document.addEventListener("keypress", function (e) {
 		if (e.key === "r") {
@@ -191,6 +212,9 @@ window.addEventListener("load", function (e) {
 	$$(document).find('#reloadLink').addEventListener("click", function (e) {
 		e.preventDefault();
 		updateData();
+	});
+	$$(document).find('#sortMode').addEventListener("change", function (e) {
+		onSortModeChange(e.target.value);
 	});
 	const reloadRatesDiv = $$(document).find('#reloadRate');
 	reloadRatesDiv.innerHTML = getReloadRatesHTML(reloadRates);
