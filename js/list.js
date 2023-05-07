@@ -28,7 +28,7 @@ function updateData() {
 	tableOverlay.classList.value = '';
 	const lastUpdated = $$(document).find('#lastUpdated');
 	lastUpdated.innerHTML = `Loading`;
-	const url = `https://www.reddit.com/user/KickOpenTheDoorBot/submitted/.json?sort=new&_=${
+	const url = `https://www.reddit.com/user/KickOpenTheDoorBot/submitted/.json?sort=new&limit=50&_=${
 		new Date().getTime()
 	}`;
 	loadBosses(url);
