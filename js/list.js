@@ -69,7 +69,8 @@ function updatePage(json) {
 		}"><a class="bossLink" href="${
 			`https://www.reddit.com/r/kickopenthedoor/comments/${boss.id}`
 		}" target="_blank">${
-			boss.title.replace(/(.*?)\s+\[.*?\]$/, '$1')
+			// The second regex splits words longer than 32 characters into 32 characters long chunks
+			boss.title.replace(/(.*?)\s+\[.*?\]$/, '$1').replaceAll(/(\S{31})(\S)/g, "$1\u200B$2")
 		}</a><span class="flex-grow"></span><a class="thing refresherLink" title="Watch this boss" href="../refresher/index.html?id=${
 			boss.id
 		}">&#x1F440;</a>`;
