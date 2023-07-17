@@ -11,12 +11,7 @@ const sounds = {
 
 const reloadRates = {
 	0: 'Disabled',
-	500: '0.5 seconds',
-	750: '0.75 seconds',
-	1000: 'second',
-	2000: '2 seconds',
-	3000: '3 seconds',
-	5000: '5 seconds',
+	6250: '6.25 seconds',
 	10000: '10 seconds',
 	20000: '20 seconds',
 	30000: '30 seconds',

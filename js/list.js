@@ -1,6 +1,7 @@
 const reloadRates = {
 	0: 'Disabled',
-	5000: '5 seconds',
+	6250: '6.25 seconds',
+	10000: '10 seconds',
 	20000: '20 seconds',
 	60000: 'minute',
 	180000: '3 minutes',
