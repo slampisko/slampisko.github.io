@@ -298,7 +298,7 @@ function loadBoss(postId) {
 	reloadSpinnerIdle.classList.value = 'hidden';
     const ajaxUrl = `https://www.reddit.com/r/kickopenthedoor/comments/${
         postId
-    }.json?limit=30&_=${
+    }.json?limit=30&sort=new&_=${
         new Date().getTime()
     }`;
     var xhttp = new XMLHttpRequest();
