@@ -21,6 +21,26 @@ const sortModes = [
 
 let currentInterval = 0;
 let currentSortMode = 0;
+let showSlimeBosses = false;
+
+const slimeToggleDivs = [
+	{
+		id: 'showSlimeDiv',
+		clickableId: 'showSlime',
+		html: `Excluding slime bosses. <span class="link" id="showSlime">Show them</span>`,
+		clickHandler: () => {
+			toggleSlimeBosses(true);
+		}
+	},
+	{
+		id: 'hideSlimeDiv',
+		clickableId: 'hideSlime',
+		html: `Showing slime bosses. <span class="link" id="hideSlime">Exclude them</span>`,
+		clickHandler: () => {
+			toggleSlimeBosses(false);
+		}
+	}
+]
 
 function updateData() {
 	const reloadSpinner = $$(document).find('#reloadSpinner');
@@ -101,6 +121,12 @@ function updatePage(json) {
 			totalDmg
 		}</span></div>`;
 	tbody.appendChild(lastRow);
+
+	if (showSlimeBosses) {
+		$$(document).find('#hideSlimeDiv').classList.remove('hidden');
+	} else {
+		$$(document).find('#showSlimeDiv').classList.remove('hidden');
+	}
 }
 
 function getBossListFromListing(json) {
@@ -108,7 +134,7 @@ function getBossListFromListing(json) {
 	const bosses = [];
 
 	for (const post of searchData.children.filter(c => c.kind === "t3")) {
-		if (post.data.locked || post.data.title.startsWith("[Slime Only] ")) continue;
+		if (post.data.locked || (!showSlimeBosses && post.data.title.startsWith("[Slime Only] "))) continue;
 		const flair = post.data.link_flair_text;
 		const flairData = parseFlair(flair);
 		const maxDmg = getMaxDmg({
@@ -205,6 +231,26 @@ function onSortModeChange(newValue) {
 	updateData();
 }
 
+function toggleSlimeBosses(showSlime) {
+	showSlimeBosses = showSlime;
+	$$(document).find('#showSlimeDiv').classList.add('hidden');
+	$$(document).find('#hideSlimeDiv').classList.add('hidden');
+	updateData();
+}
+
+function addSlimeToggle() {
+	const domSlimeToggle = $$(document).find('div#slimeToggle');
+	slimeToggleDivs.forEach(element => {
+		const domElem = document.createElement('div');
+		domElem.id = element.id;
+		domElem.classList = 'smaller hidden';
+		domElem.innerHTML = element.html;
+		const clickable = domElem.querySelector(`#${element.clickableId}`);
+		clickable.addEventListener('click', element.clickHandler);
+		domSlimeToggle.appendChild(domElem);
+	});
+}
+
 window.addEventListener("load", function (e) {
 	document.addEventListener("keypress", function (e) {
 		if (e.key === "r") {
@@ -223,6 +269,7 @@ window.addEventListener("load", function (e) {
 	reloadRatesDiv.addEventListener("change", function(e) {
 		onReloadRateChange(e.target.value);
 	});
+	addSlimeToggle();
 	windTheClock();
 	updateData();
 });

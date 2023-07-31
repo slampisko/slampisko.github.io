@@ -25,6 +25,13 @@ td, th {
 	margin:16pt;
 }
 
+#tableHeader {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: baseline;
+}
+
 #tableOverlay {
 	position: absolute;
 	left: 0;
