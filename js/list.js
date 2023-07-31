@@ -1,3 +1,9 @@
+const PageStates = {
+	INIT: 0,
+	LOADING: 1,
+	LOADED: 2
+};
+
 const reloadRates = {
 	0: 'Disabled',
 	6250: '6.25 seconds',
@@ -22,6 +28,7 @@ const sortModes = [
 let currentInterval = 0;
 let currentSortMode = 0;
 let showSlimeBosses = false;
+let pageState = PageStates.INIT;
 
 const slimeToggleDivs = [
 	{
@@ -43,10 +50,7 @@ const slimeToggleDivs = [
 ]
 
 function updateData() {
-	$$(document).hide('#showSlimeDiv');
-	$$(document).hide('#hideSlimeDiv');
-	$$(document).show('#reloadSpinner');
-	$$(document).show('#tableOverlay');
+	setPageState(PageStates.LOADING);
 	const lastUpdated = $$(document).find('#lastUpdated');
 	lastUpdated.innerHTML = `Loading`;
 	const url = `https://www.reddit.com/user/KickOpenTheDoorBot/submitted/.json?sort=new&limit=50&_=${
@@ -70,8 +74,27 @@ function loadBosses(url) {
 	xhttp.send();
 }
 
+function createBossRow(boss, tbody, totalDmg) {
+	const tr = document.createElement('div');
+	tr.classList.add('tr');
+	const linkRow = document.createElement('div');
+	linkRow.classList.add('bossLink');
+	const dataRow = document.createElement('div');
+	dataRow.classList.add('bossData');
+	linkRow.innerHTML = `<img class="thing smallthumb" alt="Post Thumbnail" src="${boss.thumbnail}"><a class="bossLink" href="${`https://www.reddit.com/r/kickopenthedoor/comments/${boss.id}`}" target="_blank">${
+		// The second regex splits words longer than 32 characters into 32 characters long chunks
+		boss.title.replace(/(.*?)\s+\[.*?\]$/, '$1').replaceAll(/(\S{31})(\S)/g, "$1\u200B$2")}</a><span class="flex-grow"></span><a class="thing refresherLink" title="Watch this boss" href="../refresher/index.html?id=${boss.id}">&#x1F440;</a>`;
+
+	dataRow.innerHTML = `<div class="td flex-fill">
+		<span class="thing flair" style="background-color:${boss.flair.backgroundColor}; color: ${boss.flair.textColor === "light" ? "white" : "black"}">${boss.flair.text}</span></div><div class="td"><span title="Approx. Max Gold">&#x1F4B0;</span> ${getMaxGold(boss)}</div><div class="td"><span title="Max Damage">&#x1F4A5;<span> ${boss.maxDmg}</div>`;
+	tr.appendChild(linkRow);
+	tr.appendChild(dataRow);
+	tbody.appendChild(tr);
+	totalDmg += Number(boss.maxDmg);
+	return totalDmg;
+}
+
 function updatePage(json) {
-	preparePage();
 	const bosses = getBossListFromListing(json);
 	if (bosses.length < 1) return;
 	bosses.sort(sortModes[currentSortMode]);
@@ -79,39 +102,7 @@ function updatePage(json) {
 	tbody.innerHTML = '';
 	let totalDmg = 0;
 	for (const boss of bosses) {
-		const tr = document.createElement('div');
-		tr.classList.add('tr');
-		const linkRow = document.createElement('div');
-		linkRow.classList.add('bossLink');
-		const dataRow = document.createElement('div');
-		dataRow.classList.add('bossData');
-		linkRow.innerHTML = `<img class="thing smallthumb" alt="Post Thumbnail" src="${
-			boss.thumbnail
-		}"><a class="bossLink" href="${
-			`https://www.reddit.com/r/kickopenthedoor/comments/${boss.id}`
-		}" target="_blank">${
-			// The second regex splits words longer than 32 characters into 32 characters long chunks
-			boss.title.replace(/(.*?)\s+\[.*?\]$/, '$1').replaceAll(/(\S{31})(\S)/g, "$1\u200B$2")
-		}</a><span class="flex-grow"></span><a class="thing refresherLink" title="Watch this boss" href="../refresher/index.html?id=${
-			boss.id
-		}">&#x1F440;</a>`;
-
-		dataRow.innerHTML = `<div class="td flex-fill">
-		<span class="thing flair" style="background-color:${
-			boss.flair.backgroundColor
-		}; color: ${
-			boss.flair.textColor === "light" ? "white" : "black"
-		}">${
-			boss.flair.text
-		}</span></div><div class="td"><span title="Approx. Max Gold">&#x1F4B0;</span> ${
-			getMaxGold(boss)
-		}</div><div class="td"><span title="Max Damage">&#x1F4A5;<span> ${
-			boss.maxDmg
-		}</div>`;
-		tr.appendChild(linkRow);
-		tr.appendChild(dataRow);
-		tbody.appendChild(tr);
-		totalDmg += Number(boss.maxDmg);
+		totalDmg = createBossRow(boss, tbody, totalDmg);
 	}
 	const lastRow = document.createElement('div');
 	lastRow.classList.add('tr');
@@ -122,15 +113,11 @@ function updatePage(json) {
 		}</span></div>`;
 	tbody.appendChild(lastRow);
 
-	if (showSlimeBosses) {
-		$$(document).show('#hideSlimeDiv');
-	} else {
-		$$(document).show('#showSlimeDiv');
-	}
+	setPageState(PageStates.LOADED);
 }
 
 function updateError(json) {
-	preparePage();
+	setPageState(PageStates.LOADED);
 	const tbody = $$(document).find('#bossesTable');
 	const response = JSON.parse(json);
 	if (response.error == 429) {
@@ -150,12 +137,6 @@ function updateError(json) {
 					response.message
 				}</span></div>`;
 	}
-}
-
-function preparePage() {
-	$$(document).hide('#reloadSpinner');
-	$$(document).hide('#tableOverlay');
-	setInitialLastUpdatedString();
 }
 
 function getBossListFromListing(json) {
@@ -276,6 +257,29 @@ function addSlimeToggle() {
 		clickable.addEventListener('click', element.clickHandler);
 		domSlimeToggle.appendChild(domElem);
 	});
+}
+
+function setPageState(newState) {
+	pageState = newState;
+	switch (newState) {
+		case PageStates.LOADING: 
+			$$(document).hide('#showSlimeDiv');
+			$$(document).hide('#hideSlimeDiv');
+			$$(document).show('#reloadSpinner');
+			$$(document).show('#tableOverlay');
+			break;
+		case PageStates.LOADED:
+			if (showSlimeBosses) {
+				$$(document).show('#hideSlimeDiv');
+			} else {
+				$$(document).show('#showSlimeDiv');
+			}
+			$$(document).hide('#reloadSpinner');
+			$$(document).hide('#tableOverlay');
+			setInitialLastUpdatedString();
+		default:
+			// noop
+	}
 }
 
 window.addEventListener("load", function (e) {
