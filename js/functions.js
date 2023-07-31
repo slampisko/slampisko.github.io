@@ -26,6 +26,12 @@ function $$(element) {
         findAll: function(selector) {
             return element.querySelectorAll(selector);
         },
+		hide: function(selector) {
+			element.querySelector(selector).classList.add('hidden');
+		},
+		show: function(selector) {
+			element.querySelector(selector).classList.remove('hidden');
+		}
     };
 }
 

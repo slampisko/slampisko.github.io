@@ -27,7 +27,7 @@ td, th {
 
 #tableHeader {
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: wrap-reverse;
 	justify-content: space-between;
 	align-items: baseline;
 }

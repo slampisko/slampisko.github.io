@@ -27,7 +27,7 @@ const slimeToggleDivs = [
 	{
 		id: 'showSlimeDiv',
 		clickableId: 'showSlime',
-		html: `Excluding slime bosses. <span class="link" id="showSlime">Show them</span>`,
+		html: `<span class="link" id="showSlime">Show</span> slime bosses`,
 		clickHandler: () => {
 			toggleSlimeBosses(true);
 		}
@@ -35,7 +35,7 @@ const slimeToggleDivs = [
 	{
 		id: 'hideSlimeDiv',
 		clickableId: 'hideSlime',
-		html: `Showing slime bosses. <span class="link" id="hideSlime">Exclude them</span>`,
+		html: `<span class="link" id="hideSlime">Hide</span> slime bosses`,
 		clickHandler: () => {
 			toggleSlimeBosses(false);
 		}
@@ -43,10 +43,10 @@ const slimeToggleDivs = [
 ]
 
 function updateData() {
-	const reloadSpinner = $$(document).find('#reloadSpinner');
-	reloadSpinner.classList.value = 'spinner';
-	const tableOverlay = $$(document).find('#tableOverlay');
-	tableOverlay.classList.value = '';
+	$$(document).hide('#showSlimeDiv');
+	$$(document).hide('#hideSlimeDiv');
+	$$(document).show('#reloadSpinner');
+	$$(document).show('#tableOverlay');
 	const lastUpdated = $$(document).find('#lastUpdated');
 	lastUpdated.innerHTML = `Loading`;
 	const url = `https://www.reddit.com/user/KickOpenTheDoorBot/submitted/.json?sort=new&limit=50&_=${
@@ -123,9 +123,9 @@ function updatePage(json) {
 	tbody.appendChild(lastRow);
 
 	if (showSlimeBosses) {
-		$$(document).find('#hideSlimeDiv').classList.remove('hidden');
+		$$(document).show('#hideSlimeDiv');
 	} else {
-		$$(document).find('#showSlimeDiv').classList.remove('hidden');
+		$$(document).show('#showSlimeDiv');
 	}
 }
 
@@ -233,8 +233,6 @@ function onSortModeChange(newValue) {
 
 function toggleSlimeBosses(showSlime) {
 	showSlimeBosses = showSlime;
-	$$(document).find('#showSlimeDiv').classList.add('hidden');
-	$$(document).find('#hideSlimeDiv').classList.add('hidden');
 	updateData();
 }
 
