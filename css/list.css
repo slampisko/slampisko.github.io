@@ -82,6 +82,10 @@ td, th {
 	flex-grow: 1;
 }
 
+.totalDmg {
+	border-top: 1px solid #f5ae22;
+}
+
 .refresherLink {
 	font-size: x-large;
 	flex-shrink: 0;
