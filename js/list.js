@@ -53,6 +53,7 @@ const slimeToggleDivs = [
 
 function updateData() {
 	setPageState(PageStates.LOADING);
+	excludedBosses = [];
 	const lastUpdated = $$(document).find('#lastUpdated');
 	lastUpdated.innerHTML = `Loading`;
 	const url = `https://www.reddit.com/user/KickOpenTheDoorBot/submitted/.json?sort=new&limit=50&_=${
