@@ -15,6 +15,11 @@ td, th {
 	max-width: 48pt;
 }
 
+.smallthumb:hover {
+	opacity: 0.5;
+	cursor: pointer;
+}
+
 .tableWrapper {
 	position: relative;
 	width: 100%;
@@ -52,6 +57,10 @@ td, th {
     align-content: center;
     align-items: center;
     border: 1px solid #463D51;
+}
+
+.tr.excluded {
+	opacity: 0.33;
 }
 
 .tr > div {

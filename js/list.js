@@ -29,6 +29,8 @@ let currentInterval = 0;
 let currentSortMode = 0;
 let showSlimeBosses = false;
 let pageState = PageStates.INIT;
+let excludedBosses = [];
+let currentBosses = [];
 
 const slimeToggleDivs = [
 	{
@@ -74,8 +76,29 @@ function loadBosses(url) {
 	xhttp.send();
 }
 
+function toggleBossExcluded(boss_id) {
+	const row = $$(document).find(`#boss_${boss_id}`);
+	if (!!row) {
+		if (excludedBosses.includes(boss_id)) {
+			const index = excludedBosses.indexOf(boss_id);
+			excludedBosses.splice(index, 1);
+			row.classList.remove('excluded');
+		} else {
+			excludedBosses.push(boss_id);
+			row.classList.add('excluded');
+		}
+
+		const totalDamageNumberSpan = $$(document).find(`span#totalDamageNumber`);
+		const newMaxDamage = currentBosses.reduce((p, c) => {
+			return (excludedBosses.includes(c.id)) ? p : p + Number(c.maxDmg);
+		}, 0);
+		totalDamageNumberSpan.textContent = newMaxDamage;
+	}
+}
+
 function createBossRow(boss, tbody, totalDmg) {
 	const tr = document.createElement('div');
+	tr.id = `boss_${boss.id}`;
 	tr.classList.add('tr');
 	const linkRow = document.createElement('div');
 	linkRow.classList.add('bossLink');
@@ -84,6 +107,10 @@ function createBossRow(boss, tbody, totalDmg) {
 	linkRow.innerHTML = `<img class="thing smallthumb" alt="Post Thumbnail" src="${boss.thumbnail}"><a class="bossLink" href="${`https://www.reddit.com/r/kickopenthedoor/comments/${boss.id}`}" target="_blank">${
 		// The second regex splits words longer than 32 characters into 32 characters long chunks
 		boss.title.replace(/(.*?)\s+\[.*?\]$/, '$1').replaceAll(/(\S{31})(\S)/g, "$1\u200B$2")}</a><span class="flex-grow"></span><a class="thing refresherLink" title="Watch this boss" href="../refresher/index.html?id=${boss.id}">&#x1F440;</a>`;
+	const thumb = $$(linkRow).find(`img`);
+	thumb.addEventListener('click', function() {
+		toggleBossExcluded(boss.id);
+	});
 
 	dataRow.innerHTML = `<div class="td flex-fill">
 		<span class="thing flair" style="background-color:${boss.flair.backgroundColor}; color: ${boss.flair.textColor === "light" ? "white" : "black"}">${boss.flair.text}</span></div><div class="td"><span title="Approx. Max Gold">&#x1F4B0;</span> ${getMaxGold(boss)}</div><div class="td"><span title="Max Damage">&#x1F4A5;<span> ${boss.maxDmg}</div>`;
@@ -101,6 +128,7 @@ function updatePage(json) {
 	const tbody = $$(document).find('#bossesTable');
 	tbody.innerHTML = '';
 	let totalDmg = 0;
+	currentBosses = bosses;
 	for (const boss of bosses) {
 		totalDmg = createBossRow(boss, tbody, totalDmg);
 	}
@@ -108,9 +136,9 @@ function updatePage(json) {
 	lastRow.classList.add('tr');
 	lastRow.innerHTML = `<div class="totalDmg">
 		<span class="thing td rightalign">Total Max Damage:</span>
-		<span class="thing td" title="Total Max Damage">&#x1F4A5; ${
+		<span class="thing td" title="Total Max Damage">&#x1F4A5; <span id="totalDamageNumber">${
 			totalDmg
-		}</span></div>`;
+		}</span></span></div>`;
 	tbody.appendChild(lastRow);
 
 	setPageState(PageStates.LOADED);
