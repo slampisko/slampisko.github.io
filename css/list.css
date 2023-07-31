@@ -16,8 +16,8 @@ td, th {
 }
 
 .tableWrapper {
-  position: relative;
-  width: 100%;
+	position: relative;
+	width: 100%;
 }
 
 .mainContent {
@@ -48,9 +48,10 @@ td, th {
 
 .tr {
     display: flex;
-	flex-direction: column;
-	flex-wrap: wrap;
-	border: 1px solid #463D51;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+    border: 1px solid #463D51;
 }
 
 .tr > div {

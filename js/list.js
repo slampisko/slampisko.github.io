@@ -58,8 +58,12 @@ function updateData() {
 function loadBosses(url) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
-		if (this.readyState == 4 && this.status == 200) {
-			updatePage(this.responseText);
+		if (this.readyState == 4) {
+			if (this.status == 200) {
+				updatePage(this.responseText);
+			} else {
+				updateError(this.responseText);
+			}
 		}
 	};
 	xhttp.open("GET", url, true);
@@ -67,11 +71,7 @@ function loadBosses(url) {
 }
 
 function updatePage(json) {
-	const reloadSpinner = $$(document).find('#reloadSpinner');
-	reloadSpinner.classList.value = 'hidden';
-	const tableOverlay = $$(document).find('#tableOverlay');
-	tableOverlay.classList.add('hidden');
-	setInitialLastUpdatedString();
+	preparePage();
 	const bosses = getBossListFromListing(json);
 	if (bosses.length < 1) return;
 	bosses.sort(sortModes[currentSortMode]);
@@ -127,6 +127,35 @@ function updatePage(json) {
 	} else {
 		$$(document).show('#showSlimeDiv');
 	}
+}
+
+function updateError(json) {
+	preparePage();
+	const tbody = $$(document).find('#bossesTable');
+	const response = JSON.parse(json);
+	if (response.error == 429) {
+		tbody.innerHTML = `<div class="tr"><span class="thing">&#x1F570;</span><span class="info">You are getting rate limited by reddit!</span>` +
+				`<div class="tr"><span class='smaller'>Avoid refreshing over 100 times within 10 minutes to prevent this.` +
+				`</span></div>`
+		currentInterval = 10000;
+		const reloadRateSelect = $$(document).find('#reloadRate');
+		if (reloadRateSelect.value < 10000) {
+			reloadRateSelect.value = 10000;
+		}
+	} else {
+		tbody.innerHTML = `<div class="tr"><span class="thing">&#x274C;</span><span class="info">Oof, that's an error!</span></div>` +
+				`<div class="tr"><span class='smaller'>Error ${
+					response.error
+				}: ${
+					response.message
+				}</span></div>`;
+	}
+}
+
+function preparePage() {
+	$$(document).hide('#reloadSpinner');
+	$$(document).hide('#tableOverlay');
+	setInitialLastUpdatedString();
 }
 
 function getBossListFromListing(json) {
