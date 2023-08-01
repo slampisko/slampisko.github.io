@@ -1,44 +1,15 @@
-const PageStates = {
-	INIT: 0,
-	LOADING: 1,
-	LOADED: 2
-};
+"use strict";
 
-const reloadRates = {
-	0: 'Disabled',
-	6250: '6.25 seconds',
-	10000: '10 seconds',
-	20000: '20 seconds',
-	60000: 'minute',
-	180000: '3 minutes',
-	300000: '5 minutes',
-	600000: '10 minutes',
-	1800000: '30 minutes',
-};
-
-const sortModes = [
-	// default sort -- by least HP
-	(a, b) => a.currentHp - b.currentHp,
-	// no sorting (i.e. by newest)
-	(a, b) => 1,
-	// by biggest max damage
-	(a, b) => b.maxDmg - a.maxDmg,
-];
-
-let currentInterval = 0;
-let currentSortMode = 0;
-let showSlimeBosses = false;
-let pageState = PageStates.INIT;
+const page = new PageModel();
 let excludedBosses = [];
 let currentBosses = [];
 
-const slimeToggleDivs = [
-	{
+const slimeToggleDivs = [{
 		id: 'showSlimeDiv',
 		clickableId: 'showSlime',
 		html: `<span class="link" id="showSlime">Show</span> slime bosses`,
 		clickHandler: () => {
-			toggleSlimeBosses(true);
+			page.showSlimeBosses = true;
 		}
 	},
 	{
@@ -46,13 +17,13 @@ const slimeToggleDivs = [
 		clickableId: 'hideSlime',
 		html: `<span class="link" id="hideSlime">Hide</span> slime bosses`,
 		clickHandler: () => {
-			toggleSlimeBosses(false);
+			page.showSlimeBosses = false;
 		}
 	}
 ]
 
 function updateData() {
-	setPageState(PageStates.LOADING);
+	page.state = PageStates.LOADING;
 	excludedBosses = [];
 	const lastUpdated = $$(document).find('#lastUpdated');
 	lastUpdated.innerHTML = `Loading`;
@@ -109,7 +80,7 @@ function createBossRow(boss, tbody, totalDmg) {
 		// The second regex splits words longer than 32 characters into 32 characters long chunks
 		boss.title.replace(/(.*?)\s+\[.*?\]$/, '$1').replaceAll(/(\S{31})(\S)/g, "$1\u200B$2")}</a><span class="flex-grow"></span><a class="thing refresherLink" title="Watch this boss" href="../refresher/index.html?id=${boss.id}">&#x1F440;</a>`;
 	const thumb = $$(linkRow).find(`img`);
-	thumb.addEventListener('click', function() {
+	thumb.addEventListener('click', function () {
 		toggleBossExcluded(boss.id);
 	});
 
@@ -125,7 +96,7 @@ function createBossRow(boss, tbody, totalDmg) {
 function updatePage(json) {
 	const bosses = getBossListFromListing(json);
 	if (bosses.length < 1) return;
-	bosses.sort(sortModes[currentSortMode]);
+	bosses.sort(sortModes[page.sortMode]);
 	const tbody = $$(document).find('#bossesTable');
 	tbody.innerHTML = '';
 	let totalDmg = 0;
@@ -142,25 +113,25 @@ function updatePage(json) {
 		}</span></span></div>`;
 	tbody.appendChild(lastRow);
 
-	setPageState(PageStates.LOADED);
+	page.state = PageStates.LOADED;
 }
 
 function updateError(json) {
-	setPageState(PageStates.LOADED);
+	page.state = PageStates.LOADED;
 	const tbody = $$(document).find('#bossesTable');
 	const response = JSON.parse(json);
 	if (response.error == 429) {
 		tbody.innerHTML = `<div class="tr"><span class="thing">&#x1F570;</span><span class="info">You are getting rate limited by reddit!</span>` +
-				`<div class="tr"><span class='smaller'>Avoid refreshing over 100 times within 10 minutes to prevent this.` +
-				`</span></div>`
-		currentInterval = 10000;
+			`<div class="tr"><span class='smaller'>Avoid refreshing over 100 times within 10 minutes to prevent this.` +
+			`</span></div>`
+		page.refreshInterval = 10000;
 		const reloadRateSelect = $$(document).find('#reloadRate');
 		if (reloadRateSelect.value < 10000) {
 			reloadRateSelect.value = 10000;
 		}
 	} else {
 		tbody.innerHTML = `<div class="tr"><span class="thing">&#x274C;</span><span class="info">Oof, that's an error!</span></div>` +
-				`<div class="tr"><span class='smaller'>Error ${
+			`<div class="tr"><span class='smaller'>Error ${
 					response.error
 				}: ${
 					response.message
@@ -173,7 +144,7 @@ function getBossListFromListing(json) {
 	const bosses = [];
 
 	for (const post of searchData.children.filter(c => c.kind === "t3")) {
-		if (post.data.locked || (!showSlimeBosses && post.data.title.startsWith("[Slime Only] "))) continue;
+		if (post.data.locked || (!page.showSlimeBosses && post.data.title.startsWith("[Slime Only] "))) continue;
 		const flair = post.data.link_flair_text;
 		const flairData = parseFlair(flair);
 		const maxDmg = getMaxDmg({
@@ -216,8 +187,7 @@ function parseFlair(flair) {
 	return {
 		type: flair.replace(/([^ ]+).*/, '$1'),
 		stars: flair.includes('Boss') ?
-				flair.replace(/(.*?) .*/, '$1') :
-				flair.replace(/.*? (.*?) .*/, '$1'),
+			flair.replace(/(.*?) .*/, '$1') : flair.replace(/.*? (.*?) .*/, '$1'),
 		currentHp: flair.replace(/.*? \[.*? (\d+).*/, '$1'),
 		maxHp: flair.replace(/.*?\/(\d+).*/, '$1')
 	};
@@ -258,21 +228,7 @@ function windTheClock() {
 
 function onEverySecond() {
 	updateLastUpdatedString();
-	upholdReloadRate(currentInterval);
-}
-
-function onReloadRateChange(newValue) {
-	currentInterval = newValue;
-}
-
-function onSortModeChange(newValue) {
-	currentSortMode = newValue;
-	updateData();
-}
-
-function toggleSlimeBosses(showSlime) {
-	showSlimeBosses = showSlime;
-	updateData();
+	upholdReloadRate(page.refreshInterval);
 }
 
 function addSlimeToggle() {
@@ -288,17 +244,16 @@ function addSlimeToggle() {
 	});
 }
 
-function setPageState(newState) {
-	pageState = newState;
+function onStateChange(oldState, newState) {
 	switch (newState) {
-		case PageStates.LOADING: 
+		case PageStates.LOADING:
 			$$(document).hide('#showSlimeDiv');
 			$$(document).hide('#hideSlimeDiv');
 			$$(document).show('#reloadSpinner');
 			$$(document).show('#tableOverlay');
 			break;
 		case PageStates.LOADED:
-			if (showSlimeBosses) {
+			if (page.showSlimeBosses) {
 				$$(document).show('#hideSlimeDiv');
 			} else {
 				$$(document).show('#showSlimeDiv');
@@ -311,23 +266,35 @@ function setPageState(newState) {
 	}
 }
 
+/**
+ * @param {PropertyChangedEvent} event The event that was raised
+ */
+function onPropertyChange(event) {
+	if (['sortMode', 'showSlimeBosses'].includes(event.detail.property)) {
+		updateData();
+	} else if (event.detail.property === 'state') {
+		onStateChange(event.detail.oldValue, event.detail.newValue);
+	}
+}
+
 window.addEventListener("load", function (e) {
 	document.addEventListener("keypress", function (e) {
 		if (e.key === "r") {
 			updateData();
 		}
 	});
+	document.addEventListener('propertychange', onPropertyChange);
 	$$(document).find('#reloadLink').addEventListener("click", function (e) {
 		e.preventDefault();
 		updateData();
 	});
 	$$(document).find('#sortMode').addEventListener("change", function (e) {
-		onSortModeChange(e.target.value);
+		page.sortMode = e.target.value;
 	});
 	const reloadRatesDiv = $$(document).find('#reloadRate');
 	reloadRatesDiv.innerHTML = getReloadRatesHTML(reloadRates);
-	reloadRatesDiv.addEventListener("change", function(e) {
-		onReloadRateChange(e.target.value);
+	reloadRatesDiv.addEventListener("change", function (e) {
+		page.refreshInterval = e.target.value;
 	});
 	addSlimeToggle();
 	windTheClock();
