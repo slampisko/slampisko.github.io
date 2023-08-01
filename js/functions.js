@@ -19,7 +19,11 @@ function getTimestampThresholdText(delta) {
 }
 
 function $$(element) {
-    return {
+	if (typeof element === 'string') {
+		return new ElementBuilder(element).get();
+	}
+
+	return {
         find: function(selector) {
             return element.querySelector(selector);
         },

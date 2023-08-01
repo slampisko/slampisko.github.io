@@ -1,5 +1,55 @@
 "use strict";
 
+class ElementBuilder {
+    /**
+     * @param {string} element The element to create
+     */
+    constructor(element) {
+        const matches = element.split(/(\w+)(?:#(\w+))?((?:\.\w+)*)/g);
+        if (matches.length <= 1 || matches[0] !== '') {
+            throw new SyntaxError('You must provide a valid element string!');
+        }
+        this._element = document.createElement(matches[1]);
+        if (!!matches[2]) {
+            this._element.id = matches[2];
+        }
+        if (!!matches[3]) {
+            this.classes(matches[3].split('.'));
+        }
+    }
+
+    /**
+     * @param {string} id
+     */
+    id(id) {
+        this._element.id = id;
+        return this;
+    }
+
+    /**
+     * @param {string[]} classes
+     */
+    classes(classes) {
+        this._element.classList = classes.filter(c => c !== '').join(' ');
+        return this;
+    }
+
+    /**
+     * @param {string} html
+     */
+    html(html) {
+        this._element.innerHTML = html;
+        return this;
+    }
+
+    /**
+     * @returns {HTMLElement} The created element
+     */
+    get() {
+        return this._element;
+    }
+}
+
 const PageStates = {
 	INIT: 0,
 	LOADING: 1,

@@ -69,13 +69,9 @@ function toggleBossExcluded(boss_id) {
 }
 
 function createBossRow(boss, tbody, totalDmg) {
-	const tr = document.createElement('div');
-	tr.id = `boss_${boss.id}`;
-	tr.classList.add('tr');
-	const linkRow = document.createElement('div');
-	linkRow.classList.add('bossLink');
-	const dataRow = document.createElement('div');
-	dataRow.classList.add('bossData');
+	const tr = $$(`div#boss_${boss.id}.tr`);
+	const linkRow = $$('div.bossLink');
+	const dataRow = $$('div.bossData');
 	linkRow.innerHTML = `<img class="thing smallthumb" alt="Post Thumbnail" src="${boss.thumbnail}"><a class="bossLink" href="${`https://www.reddit.com/r/kickopenthedoor/comments/${boss.id}`}" target="_blank">${
 		// The second regex splits words longer than 32 characters into 32 characters long chunks
 		boss.title.replace(/(.*?)\s+\[.*?\]$/, '$1').replaceAll(/(\S{31})(\S)/g, "$1\u200B$2")}</a><span class="flex-grow"></span><a class="thing refresherLink" title="Watch this boss" href="../refresher/index.html?id=${boss.id}">&#x1F440;</a>`;
@@ -104,13 +100,12 @@ function updatePage(json) {
 	for (const boss of bosses) {
 		totalDmg = createBossRow(boss, tbody, totalDmg);
 	}
-	const lastRow = document.createElement('div');
-	lastRow.classList.add('tr');
-	lastRow.innerHTML = `<div class="totalDmg">
-		<span class="thing td rightalign">Total Max Damage:</span>
-		<span class="thing td" title="Total Max Damage">&#x1F4A5; <span id="totalDamageNumber">${
-			totalDmg
-		}</span></span></div>`;
+	const lastRow = new ElementBuilder('div.tr')
+		.html(`<div class="totalDmg"><span class="thing td rightalign">Total Max Damage:</span>` +
+			`<span class="thing td" title="Total Max Damage">&#x1F4A5; <span id="totalDamageNumber">${
+				totalDmg
+			}</span></span></div>`)
+		.get();
 	tbody.appendChild(lastRow);
 
 	page.state = PageStates.LOADED;
@@ -234,10 +229,9 @@ function onEverySecond() {
 function addSlimeToggle() {
 	const domSlimeToggle = $$(document).find('div#slimeToggle');
 	slimeToggleDivs.forEach(element => {
-		const domElem = document.createElement('div');
-		domElem.id = element.id;
-		domElem.classList = 'smaller hidden';
-		domElem.innerHTML = element.html;
+		const domElem = new ElementBuilder(`div#${element.id}.smaller.hidden`)
+			.html(element.html)
+			.get()
 		const clickable = domElem.querySelector(`#${element.clickableId}`);
 		clickable.addEventListener('click', element.clickHandler);
 		domSlimeToggle.appendChild(domElem);
