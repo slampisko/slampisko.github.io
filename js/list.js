@@ -80,8 +80,11 @@ function createBossRow(boss, tbody, totalDmg) {
 		toggleBossExcluded(boss.id);
 	});
 
+	const [bg, fg] = getFlairColors(boss.flair.backgroundColor);
 	dataRow.innerHTML = `<div class="td flex-fill">
-		<span class="thing flair" style="background-color:${boss.flair.backgroundColor}; color: ${boss.flair.textColor === "light" ? "white" : "black"}">${boss.flair.text}</span></div><div class="td"><span title="Approx. Max Gold">&#x1F4B0;</span> ${getMaxGold(boss)}</div><div class="td"><span title="Max Damage">&#x1F4A5;<span> ${boss.maxDmg}</div>`;
+		<span class="thing flair" style="background-color:${bg}; color:${fg}">${boss.flair.text}</span></div>
+		<div class="td"><span title="Approx. Max Gold">&#x1F4B0;</span> ${getMaxGold(boss)}</div>
+		<div class="td"><span title="Max Damage">&#x1F4A5;<span> ${boss.maxDmg}</div>`;
 	tr.appendChild(linkRow);
 	tr.appendChild(dataRow);
 	tbody.appendChild(tr);

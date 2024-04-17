@@ -1,17 +1,17 @@
 * {
 	box-sizing: border-box;
-}  
+}
 
 body {
-	background-color: #1f0f1f;
-	color: #fdf0d5;
+	background-color: #002b36;
+	color: #fdf6e3;
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	margin: 0;
 }
 
 a,
 .link {
-	color: #f5ae22;
+	color: #b58900;
 	cursor: pointer;
 	text-decoration-line: underline;
 }
@@ -22,17 +22,17 @@ table {
 
 th,
 td {
-	border: 1px solid #074F57;
+	border: 1px solid #586e75;
 }
 
 th {
-	background-color: #074F57;
+	background-color: #586e75;
 }
 
 kbd, input, select {
-	color: #fdf0d5;
-	border: 1px solid #f5ae22;
-	background-color: #463D51;
+	color: #fdf6e3;
+	border: 1px solid #b58900;
+	background-color: #002b36;
 	border-radius: 2px;
 	padding: 2pt;
 	margin: 2pt;
@@ -44,13 +44,13 @@ input, select {
 
 input:disabled, input:disabled:hover,
 select:disabled, select:disabled:hover {
-	background-color: #1f0f1f;
-	color:#463D51;
+	background-color: #002b36;
+	color:#586e75;
 	cursor: not-allowed;
 }
 
 option {
-	background-color: #074F57;
+	background-color: #586e75;
 }
 
 kbd {
@@ -63,7 +63,7 @@ kbd {
 }
 
 input:hover, select:hover {
-	background-color: #074F57;
+	background-color: #586e75;
 }
 
 .hidden {

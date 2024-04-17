@@ -10,7 +10,7 @@ p {
     flex-shrink: 0;
     font-size: smaller;
     text-decoration: none;
-    border-bottom: 1px solid #f5ae22;
+    border-bottom: 1px solid #b58900;
 }
 
 .flexContainer.centerAligned {
@@ -18,7 +18,7 @@ p {
 }
 
 #postTitleWrapper {
-    background-color: #463D51;
+    background-color: #002b36;
     flex-direction: column;
 }
 
@@ -72,9 +72,9 @@ div.tile {
 }
 
 .authorFlair {
-    color: #1f0f1f;
     font-size: smaller;
-    border-radius: 2px;
+    border: 1px solid #eee8d5;
+    border-radius: 3px;
     padding: 2pt;
     display: inline-block;
 }
@@ -91,7 +91,7 @@ img.authorFlairEmoji {
 }
 
 .spinner.idle {
-	color: #b1150f;
+	color: #dc322f;
 	animation: none;
 }
 
@@ -116,15 +116,15 @@ img.authorFlairEmoji {
 }
 
 .badge.low {
-    background: #4b6e3a;
+    background: #859900;
 }
 
 .badge.medium {
-    background: #f5ae22;
+    background: #b58900;
 }
 
 .badge.high {
-    background: #b1150f;
+    background: #dc322f;
 }
 
 .seen {
@@ -136,7 +136,7 @@ img.authorFlairEmoji {
 }
 
 .comment {
-    border-left: 2px solid #4b6e3a;
+    border-left: 2px solid #859900;
 }
 
 .replies>.comment {
@@ -145,7 +145,7 @@ img.authorFlairEmoji {
 
 .comment>.content {
     font-size: smaller;
-    background-color: #042e33;
+    background-color: #073642;
 }
 
 #commentDeltaHistory {
@@ -162,12 +162,12 @@ img.authorFlairEmoji {
     top: 0;
     left: 0;
     z-index: 50;
-    background: linear-gradient(to right, transparent, transparent, #1f0f1f);
+    background: linear-gradient(to right, transparent, transparent, #002b36);
 }
 
 #header {
-    background-color: #042e33;
-    border-bottom: 2px solid #f5ae22;
+    background-color: #002b36;
+    border-bottom: 2px solid #b58900;
 }
 
 #postFlair,
@@ -206,13 +206,13 @@ img.authorFlairEmoji {
 }
 
 #statusBar.idle {
-    background-color: #042e33;
-    border-top: 2px solid #f5ae22;
+    background-color: #002b36;
+    border-top: 2px solid #b58900;
 }
 
 #statusBar.watching {
-    background-color: #4b6e3a;
-    border-top: 2px solid #f5ae22;
+    background-color: #859900;
+    border-top: 2px solid #b58900;
 }
 
 .clock {
