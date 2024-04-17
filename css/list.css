@@ -56,7 +56,7 @@ td, th {
     flex-wrap: wrap;
     align-content: center;
     align-items: center;
-    border: 1px solid #073642;
+    border: 1px solid var(--base02);
 }
 
 .tr.excluded {
@@ -70,7 +70,7 @@ td, th {
 }
 
 .tr > div.bossLink, .totalDmg {
-	background-color: #073642;
+	background-color: var(--base02);
 	font-weight: bold;
 }
 
@@ -92,7 +92,7 @@ td, th {
 }
 
 .totalDmg {
-	border-top: 1px solid #f5ae22;
+	border-top: 1px solid var(--yellow);
 }
 
 .refresherLink {

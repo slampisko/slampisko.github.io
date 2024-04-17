@@ -10,7 +10,7 @@ p {
     flex-shrink: 0;
     font-size: smaller;
     text-decoration: none;
-    border-bottom: 1px solid #b58900;
+    border-bottom: 1px solid var(--yellow);
 }
 
 .flexContainer.centerAligned {
@@ -18,7 +18,7 @@ p {
 }
 
 #postTitleWrapper {
-    background-color: #002b36;
+    background-color: var(--base02);
     flex-direction: column;
 }
 
@@ -73,7 +73,7 @@ div.tile {
 
 .authorFlair {
     font-size: smaller;
-    border: 1px solid #eee8d5;
+    border: 1px solid var(--base2);
     border-radius: 3px;
     padding: 2pt;
     display: inline-block;
@@ -91,7 +91,7 @@ img.authorFlairEmoji {
 }
 
 .spinner.idle {
-	color: #dc322f;
+	color: var(--red);
 	animation: none;
 }
 
@@ -116,15 +116,15 @@ img.authorFlairEmoji {
 }
 
 .badge.low {
-    background: #859900;
+    background: var(--green);
 }
 
 .badge.medium {
-    background: #b58900;
+    background: var(--yellow);
 }
 
 .badge.high {
-    background: #dc322f;
+    background: var(--red);
 }
 
 .seen {
@@ -136,7 +136,7 @@ img.authorFlairEmoji {
 }
 
 .comment {
-    border-left: 2px solid #859900;
+    border-left: 2px solid var(--green);
 }
 
 .replies>.comment {
@@ -145,7 +145,7 @@ img.authorFlairEmoji {
 
 .comment>.content {
     font-size: smaller;
-    background-color: #073642;
+    background-color: var(--base02);
 }
 
 #commentDeltaHistory {
@@ -162,12 +162,12 @@ img.authorFlairEmoji {
     top: 0;
     left: 0;
     z-index: 50;
-    background: linear-gradient(to right, transparent, transparent, #002b36);
+    background: linear-gradient(to right, transparent, transparent, var(--base03));
 }
 
 #header {
-    background-color: #002b36;
-    border-bottom: 2px solid #b58900;
+    background-color: var(--base03);
+    border-bottom: 2px solid var(--yellow);
 }
 
 #postFlair,
@@ -206,13 +206,13 @@ img.authorFlairEmoji {
 }
 
 #statusBar.idle {
-    background-color: #002b36;
-    border-top: 2px solid #b58900;
+    background-color: var(--base03);
+    border-top: 2px solid var(--yellow);
 }
 
 #statusBar.watching {
-    background-color: #859900;
-    border-top: 2px solid #b58900;
+    background-color: var(--green);
+    border-top: 2px solid var(--yellow);
 }
 
 .clock {
