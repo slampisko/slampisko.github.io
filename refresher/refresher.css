@@ -84,8 +84,7 @@ img.authorFlairEmoji {
     margin: 2pt 0 0 2pt;
 }
 
-#numComments,
-#currentHealth {
+#numComments {
     font-weight: bold;
     font-size: large;
 }
