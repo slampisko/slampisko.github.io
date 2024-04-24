@@ -10,7 +10,7 @@ p {
     flex-shrink: 0;
     font-size: smaller;
     text-decoration: none;
-    border-bottom: 1px solid var(--yellow);
+    border-bottom: 1px solid var(--base00);
 }
 
 .flexContainer.centerAligned {
@@ -73,9 +73,6 @@ div.tile {
 
 .authorFlair {
     font-size: smaller;
-    border: 1px solid var(--base2);
-    border-radius: 3px;
-    padding: 2pt;
     display: inline-block;
 }
 
@@ -85,6 +82,7 @@ img.authorFlairEmoji {
 }
 
 #numComments {
+    color: var(--fg-light);
     font-weight: bold;
     font-size: large;
 }
@@ -111,6 +109,9 @@ img.authorFlairEmoji {
 }
 
 .badge {
+    color: var(--base02);
+    padding: 4px;
+    border: 1px solid var(--base2);
     border-radius: 5px;
 }
 
@@ -165,7 +166,7 @@ img.authorFlairEmoji {
 }
 
 #header {
-    background-color: var(--base03);
+    background-color: var(--base02);
     border-bottom: 2px solid var(--yellow);
 }
 
@@ -178,7 +179,6 @@ img.authorFlairEmoji {
 .author,
 .content {
     margin: 4px;
-    padding: 4px;
 }
 
 #commentCount {

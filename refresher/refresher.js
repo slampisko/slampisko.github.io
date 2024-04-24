@@ -123,7 +123,7 @@ function updateArticleInfo(articleData) {
         articleData.title
     }</a>`;
     const [bg, fg] = getFlairColors(articleData.link_flair_background_color);
-    const postFlair = `<span style="background-color:${bg}; color:${fg}">${articleData.link_flair_text}</span>`;
+    const postFlair = `<span class="flair" style="background-color:${bg}; color:${fg}">${articleData.link_flair_text}</span>`;
     const postTitleSpan = $$(document).find('#postTitle');
     if (postTitleSpan.innerHTML !== postTitle) {
         postTitleSpan.innerHTML = postTitle;
@@ -228,7 +228,7 @@ function buildComment(commentDiv, commentData) {
 function buildFlair(commentData) {
     const [bg, fg] = getFlairColors(commentData.author_flair_background_color);
     if (commentData.author_flair_richtext && commentData.author_flair_richtext[1]) {
-        return `<div class="authorFlair" style="background-color:${
+        return `<div class="flair authorFlair" style="background-color:${
                     bg
                 };color:${
                     fg
@@ -240,7 +240,7 @@ function buildFlair(commentData) {
                     commentData.author_flair_richtext[1].t
                 }</div>`;
     } else if (commentData.author_flair_text) {
-        return `<div class="authorFlair" style="background-color:${bg}; color:${fg}">${
+        return `<div class="flair authorFlair" style="background-color:${bg}; color:${fg}">${
                     commentData.author_flair_text
                 }</div>`;
     } else return '';
