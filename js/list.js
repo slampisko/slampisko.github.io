@@ -36,11 +36,13 @@ function updateData() {
 function loadBosses(url) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function () {
-		if (this.readyState == 4) {
-			if (this.status == 200) {
+		if (this.readyState === 4) {
+			if (this.status === 200) {
 				updatePage(this.responseText);
 			} else {
-				updateError(this.responseText);
+				const jsonError = this.responseText ? this.responseText
+					: '{"error": "", "message": "The reddit server has not returned any data :("}';
+				updateError(jsonError);
 			}
 		}
 	};
