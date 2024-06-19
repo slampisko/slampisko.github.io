@@ -76,7 +76,7 @@ function createBossRow(boss, tbody, totalDmg) {
 	const dataRow = $$('div.bossData');
 	linkRow.innerHTML = `<img class="thing smallthumb" alt="Post Thumbnail" src="${boss.thumbnail}"><a class="bossLink" href="${`https://www.reddit.com/r/kickopenthedoor/comments/${boss.id}`}" target="_blank">${
 		// The second regex splits words longer than 32 characters into 32 characters long chunks
-		boss.title.replace(/(.*?)\s+\[.*?\]$/, '$1').replaceAll(/(\S{31})(\S)/g, "$1\u200B$2")}</a><span class="flex-grow"></span><a class="thing refresherLink" title="Watch this boss" href="../refresher/index.html?id=${boss.id}">&#x1F440;</a>`;
+		boss.title.replace(/(.*?)\s+\[Health:.*?\]$/, '$1').replaceAll(/(\S{31})(\S)/g, "$1\u200B$2")}</a><span class="flex-grow"></span><a class="thing refresherLink" title="Watch this boss" href="../refresher/index.html?id=${boss.id}">&#x1F440;</a>`;
 	const thumb = $$(linkRow).find(`img`);
 	thumb.addEventListener('click', function () {
 		toggleBossExcluded(boss.id);
