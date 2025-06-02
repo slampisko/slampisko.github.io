@@ -85,7 +85,6 @@ function createBossRow(boss, tbody, totalDmg) {
 	const [bg, fg] = getFlairColors(boss.flair.backgroundColor);
 	dataRow.innerHTML = `<div class="td flex-fill">
 		<span class="thing flair" style="background-color:${bg}; color:${fg}">${boss.flair.text}</span></div>
-		<div class="td"><span title="Approx. Max Gold">&#x1F4B0;</span> ${getMaxGold(boss)}</div>
 		<div class="td"><span title="Max Damage">&#x1F4A5;<span> ${boss.maxDmg}</div>`;
 	tr.appendChild(linkRow);
 	tr.appendChild(dataRow);
@@ -191,13 +190,6 @@ function parseFlair(flair) {
 		currentHp: flair.replace(/.*? \[.*? (\d+).*/, '$1'),
 		maxHp: flair.replace(/.*?\/(\d+).*/, '$1')
 	};
-}
-
-function getMaxGold(boss) {
-	// (0.086 * BossMaxHealth ^ 0.547 * (BossMaxHealth - BossCurrentHealth) ^0.263 + 10) * BossLevel ^ 0.167
-	return `${Math.floor(
-		(0.086 * boss.maxHp**0.547 * (boss.maxHp - boss.currentHp)**0.263 + 10) * boss.stars.length**0.167
-	)}`;
 }
 
 function getMaxDmg(boss) {
