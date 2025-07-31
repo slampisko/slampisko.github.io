@@ -296,7 +296,7 @@ function loadBoss(postId) {
 	reloadSpinner.classList.value = 'spinner';
 	const reloadSpinnerIdle = $$(document).find('#reloadSpinnerIdle');
 	reloadSpinnerIdle.classList.value = 'hidden';
-    const ajaxUrl = `https://www.reddit.com/r/kickopenthedoor/comments/${
+    const ajaxUrl = `https://api.reddit.com/r/kickopenthedoor/comments/${
         postId
     }.json?limit=30&sort=new&_=${
         new Date().getTime()

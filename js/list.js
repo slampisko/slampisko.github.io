@@ -27,7 +27,7 @@ function updateData() {
 	excludedBosses = [];
 	const lastUpdated = $$(document).find('#lastUpdated');
 	lastUpdated.innerHTML = `Loading`;
-	const url = `https://www.reddit.com/user/KickOpenTheDoorBot/submitted/.json?sort=new&limit=50&_=${
+	const url = `https://api.reddit.com/user/KickOpenTheDoorBot/submitted/.json?sort=new&limit=50&_=${
 		new Date().getTime()
 	}`;
 	loadBosses(url);
