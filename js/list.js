@@ -145,6 +145,7 @@ function getBossListFromListing(json) {
 	for (const post of searchData.children.filter(c => c.kind === "t3")) {
 		if (post.data.locked || (!page.showSlimeBosses && post.data.title.startsWith("[Slime Only] "))) continue;
 		const flair = post.data.link_flair_text;
+		if (!flair) continue;
 		const flairData = parseFlair(flair);
 		const maxDmg = getMaxDmg({
 			maxHp: flairData.maxHp,
