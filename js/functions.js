@@ -60,6 +60,36 @@ function getFlairColors(backgroundColor) {
 	return colorMap.hasOwnProperty(backgroundColor) ? colorMap[backgroundColor] : [backgroundColor, cBase3];
 }
 
+function fetchJSONP(url, onSuccess, onError) {
+	const callbackName = 'jsonp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
+	const separator = url.includes('?') ? '&' : '?';
+	const script = document.createElement('script');
+	script.src = url + separator + 'jsonp=' + callbackName;
+
+	const timeout = setTimeout(function () {
+		cleanup();
+		if (onError) onError(new Error('Request timeout'));
+	}, 15000);
+
+	window[callbackName] = function (data) {
+		cleanup();
+		onSuccess(data);
+	};
+
+	function cleanup() {
+		clearTimeout(timeout);
+		delete window[callbackName];
+		if (script.parentNode) script.parentNode.removeChild(script);
+	}
+
+	script.onerror = function () {
+		cleanup();
+		if (onError) onError(new Error('Network error'));
+	};
+
+	document.head.appendChild(script);
+}
+
 function getTimestampThresholdText(delta) {
 	for (const threshold of timestampThresholds) {
 		if (delta < threshold.limit * 1000) {
