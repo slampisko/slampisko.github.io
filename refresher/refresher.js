@@ -268,7 +268,7 @@ function playSound() {
 }
 
 function updatePage(jsonResponse) {
-    const boss = JSON.parse(jsonResponse);
+    const boss = jsonResponse;
 	setInitialLastUpdatedString();
     // $$(document).find('#lastUpdated').innerHTML =
     //         `${updateTimestamp.toLocaleTimeString()}.${

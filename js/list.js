@@ -113,10 +113,9 @@ function updatePage(json) {
 	page.state = PageStates.LOADED;
 }
 
-function updateError(json) {
+function updateError(response) {
 	page.state = PageStates.LOADED;
 	const tbody = $$(document).find('#bossesTable');
-	const response = JSON.parse(json);
 	if (response.error == 429) {
 		tbody.innerHTML = `<div class="tr"><span class="thing">&#x1F570;</span><span class="info">You are getting rate limited by reddit!</span>` +
 			`<div class="tr"><span class='smaller'>Avoid refreshing over 100 times within 10 minutes to prevent this.` +
@@ -137,7 +136,7 @@ function updateError(json) {
 }
 
 function getBossListFromListing(json) {
-	const searchData = JSON.parse(json).data;
+	const searchData = json.data;
 	const bosses = [];
 
 	for (const post of searchData.children.filter(c => c.kind === "t3")) {
