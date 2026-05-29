@@ -1,5 +1,3 @@
-const API_BASE_URL = 'https://api.reddit.com';
-
 const encoded_sounds = {
     click: `UklGRlQAAABXQVZFZm10IBAAAAABAAEAESsAABErAAABAAgAZGF0YTAAAACLcnGbdHGZdnGWeXGUenGTe3CTe3CUenCVeHCXdnGWdXaQdoSCeIh9eYd8foN+gH8=`,
     msg: `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`,
@@ -267,7 +265,8 @@ function playSound() {
     playedSounds.length = 0; // clear played sounds
 }
 
-function updatePage(boss) {
+function updatePage(jsonResponse) {
+    const boss = JSON.parse(jsonResponse);
 	setInitialLastUpdatedString();
     // $$(document).find('#lastUpdated').innerHTML =
     //         `${updateTimestamp.toLocaleTimeString()}.${
@@ -297,16 +296,19 @@ function loadBoss(postId) {
 	reloadSpinner.classList.value = 'spinner';
 	const reloadSpinnerIdle = $$(document).find('#reloadSpinnerIdle');
 	reloadSpinnerIdle.classList.value = 'hidden';
-    const ajaxUrl = `${API_BASE_URL}/r/kickopenthedoor/comments/${
+    const ajaxUrl = `https://api.reddit.com/r/kickopenthedoor/comments/${
         postId
     }.json?limit=30&sort=new&_=${
         new Date().getTime()
     }`;
-    fetchJSONP(ajaxUrl, function (data) {
-        updatePage(data);
-    }, function () {
-        // silently fail; the refresher just won't update
-    });
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            updatePage(this.responseText);
+        }
+    };
+    xhttp.open("GET", ajaxUrl, true);
+    xhttp.send();
 }
 
 function temporarilyDisableInput(input) {

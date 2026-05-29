@@ -1,7 +1,5 @@
 "use strict";
 
-const API_BASE_URL = 'https://api.reddit.com';
-
 const page = new PageModel();
 let excludedBosses = [];
 let currentBosses = [];
@@ -29,22 +27,27 @@ function updateData() {
 	excludedBosses = [];
 	const lastUpdated = $$(document).find('#lastUpdated');
 	lastUpdated.innerHTML = `Loading`;
-	const url = `${API_BASE_URL}/user/KickOpenTheDoorBot/submitted/.json?sort=new&limit=50&_=${
+	const url = `https://api.reddit.com/user/KickOpenTheDoorBot/submitted/.json?sort=new&limit=50&_=${
 		new Date().getTime()
 	}`;
 	loadBosses(url);
 }
 
 function loadBosses(url) {
-	fetchJSONP(url, function (data) {
-		if (data.error) {
-			updateError(data);
-		} else {
-			updatePage(data);
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if (this.readyState === 4) {
+			if (this.status === 200) {
+				updatePage(this.responseText);
+			} else {
+				const jsonError = this.responseText ? this.responseText
+					: '{"error": "", "message": "The reddit server has not returned any data :("}';
+				updateError(jsonError);
+			}
 		}
-	}, function () {
-		updateError({error: 0, message: "The reddit server has not returned any data :("});
-	});
+	};
+	xhttp.open("GET", url, true);
+	xhttp.send();
 }
 
 function toggleBossExcluded(boss_id) {
@@ -90,8 +93,8 @@ function createBossRow(boss, tbody, totalDmg) {
 	return totalDmg;
 }
 
-function updatePage(data) {
-	const bosses = getBossListFromListing(data);
+function updatePage(json) {
+	const bosses = getBossListFromListing(json);
 	if (bosses.length < 1) return;
 	bosses.sort(sortModes[page.sortMode]);
 	const tbody = $$(document).find('#bossesTable');
@@ -112,10 +115,11 @@ function updatePage(data) {
 	page.state = PageStates.LOADED;
 }
 
-function updateError(data) {
+function updateError(json) {
 	page.state = PageStates.LOADED;
 	const tbody = $$(document).find('#bossesTable');
-	if (data.error == 429) {
+	const response = JSON.parse(json);
+	if (response.error == 429) {
 		tbody.innerHTML = `<div class="tr"><span class="thing">&#x1F570;</span><span class="info">You are getting rate limited by reddit!</span>` +
 			`<div class="tr"><span class='smaller'>Avoid refreshing over 100 times within 10 minutes to prevent this.` +
 			`</span></div>`
@@ -127,15 +131,15 @@ function updateError(data) {
 	} else {
 		tbody.innerHTML = `<div class="tr"><span class="thing">&#x274C;</span><span class="info">Oof, that's an error!</span></div>` +
 			`<div class="tr"><span class='smaller'>Error ${
-					data.error
+					response.error
 				}: ${
-					data.message
+					response.message
 				}</span></div>`;
 	}
 }
 
-function getBossListFromListing(data) {
-	const searchData = data.data;
+function getBossListFromListing(json) {
+	const searchData = JSON.parse(json).data;
 	const bosses = [];
 
 	for (const post of searchData.children.filter(c => c.kind === "t3")) {
