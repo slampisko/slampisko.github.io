@@ -1,5 +1,6 @@
 "use strict";
 
+const API_BASE_URL = 'https://reddit-proxy.kickopenthedoor.workers.dev';
 const page = new PageModel();
 let excludedBosses = [];
 let currentBosses = [];
@@ -27,27 +28,24 @@ function updateData() {
 	excludedBosses = [];
 	const lastUpdated = $$(document).find('#lastUpdated');
 	lastUpdated.innerHTML = `Loading`;
-	const url = `https://api.reddit.com/user/KickOpenTheDoorBot/submitted/.json?sort=new&limit=50&_=${
+	const url = `${API_BASE_URL}/user/KickOpenTheDoorBot/submitted/.json?sort=new&limit=50&_=${
 		new Date().getTime()
 	}`;
 	loadBosses(url);
 }
 
 function loadBosses(url) {
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function () {
-		if (this.readyState === 4) {
-			if (this.status === 200) {
-				updatePage(this.responseText);
+	fetch(url)
+		.then(function (response) {
+			if (response.ok) {
+				response.json().then(function (data) { updatePage(data); });
 			} else {
-				const jsonError = this.responseText ? this.responseText
-					: '{"error": "", "message": "The reddit server has not returned any data :("}';
-				updateError(jsonError);
+				response.json().then(function (data) { updateError(data); });
 			}
-		}
-	};
-	xhttp.open("GET", url, true);
-	xhttp.send();
+		})
+		.catch(function () {
+			updateError({error: 0, message: "The reddit server has not returned any data :("});
+		});
 }
 
 function toggleBossExcluded(boss_id) {
